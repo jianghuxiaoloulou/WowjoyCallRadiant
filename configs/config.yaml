@@ -1,0 +1,31 @@
+﻿Server:
+  RunMode: debug
+  # RunMode: release
+  UDPPort: 29001
+  SepCmd: $CMD_CON$
+  SepCon: $CON_CON$
+  # 打印胶片通知功能
+  UDPFilmPort: 38007
+  CleanFilmData: 201
+  SendFilmCmd: 228
+
+General:
+  LogSavePath: storage/logs
+  LogFileName: log
+  LogFileExt: .log
+  LogMaxSize: 60
+  LogMaxAge: 7
+  MaxThreads: 100
+  MaxTasks: 100
+Object:
+  # 影像接口[get]
+  IMAGE_URL: http://wpacs.shulan.com/app/study/getStudyAndSeriesById?uidEnc=
+  # Radiant程序路径
+  RadiantPath: C:\Program Files\RadiAntViewer64bit\RadiAntViewer.exe
+  # 判断是否开启下载模式 0:关闭， 1：开启
+  CheckMode: 0
+  # 影像下载URL[GET]
+  Down_URL: http://127.0.0.1:9000/api/v1/Object/Down/UidEnc/
+  # 调用RA方式 1：共享，2：QR
+  CallRAType: 2
+  
