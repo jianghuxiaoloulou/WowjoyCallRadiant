@@ -16,21 +16,21 @@ import (
 
 // 封装对象相关操作
 type Object struct {
-	Type            int
-	Value           string
-	Paths           []string
-	AccessionNumber string
+	Type             int
+	Value            string
+	Paths            []string
+	StudyInstanceUid string
 }
 
 func NewObject(data global.RadiantData) *Object {
 	// 获取文件查看影像路径
 	paths := make([]string, 0)
-	aceNum, paths := GetImagePath(data.ParamValue)
+	studyinstanceuid, paths := GetImagePath(data.ParamValue)
 	return &Object{
-		Type:            data.ParamType,
-		Value:           data.ParamValue,
-		Paths:           paths,
-		AccessionNumber: aceNum,
+		Type:             data.ParamType,
+		Value:            data.ParamValue,
+		Paths:            paths,
+		StudyInstanceUid: studyinstanceuid,
 	}
 }
 
@@ -44,7 +44,7 @@ func (obj *Object) Image_Review() {
 		CallRadiAnt(global.RadiantParam)
 	case global.CallRadiantType_QR:
 		SliceClear(&global.QRRadiantParam)
-		global.QRRadiantParam = append(global.QRRadiantParam, obj.AccessionNumber)
+		global.QRRadiantParam = append(global.QRRadiantParam, obj.StudyInstanceUid)
 		CallRadiAntQR(global.QRRadiantParam)
 	}
 }
@@ -57,7 +57,7 @@ func (obj *Object) Append_Image_View() {
 		global.RadiantParam = append(global.RadiantParam, obj.Paths...)
 		CallRadiAnt(global.RadiantParam)
 	case global.CallRadiantType_QR:
-		global.QRRadiantParam = append(global.QRRadiantParam, obj.AccessionNumber)
+		global.QRRadiantParam = append(global.QRRadiantParam, obj.StudyInstanceUid)
 		CallRadiAntQR(global.QRRadiantParam)
 	}
 }
@@ -144,7 +144,7 @@ func ParseUDPData(RecData string) {
 }
 
 // 获取查看影像的路径
-func GetImagePath(uid_enc string) (accessionNumber string, paths []string) {
+func GetImagePath(uid_enc string) (studyInstanceUid string, paths []string) {
 	// 通过接口获取路径
 	global.Logger.Debug("开始调用后台接口获取影像信息")
 	url := global.ObjectSetting.IMAGE_URL
@@ -193,8 +193,8 @@ func GetImagePath(uid_enc string) (accessionNumber string, paths []string) {
 	if vResult, ok := result["result"]; ok {
 		if vResult != nil {
 			resultMap := vResult.(map[string]interface{})
-			if vaccessionNumber, ok := resultMap["accessionNumber"]; ok {
-				accessionNumber = vaccessionNumber.(string)
+			if vstudyInstanceUid, ok := resultMap["studyInstanceUid"]; ok {
+				studyInstanceUid = vstudyInstanceUid.(string)
 			}
 			if vSeriesList, ok := resultMap["seriesList"]; ok {
 				if vSeriesList != nil {
@@ -278,12 +278,12 @@ func CallRadiAntQR(arg []string) {
 	tem_arg = append(tem_arg, "-cl")
 	if arglen <= 1 {
 		tem_arg = append(tem_arg, "-pstv")
-		tem_arg = append(tem_arg, "00080050")
+		tem_arg = append(tem_arg, "0020000D")
 		tem_arg = append(tem_arg, arg...)
 	} else {
 		for _, value := range arg {
 			tem_arg = append(tem_arg, "-pstv")
-			tem_arg = append(tem_arg, "00080050")
+			tem_arg = append(tem_arg, "0020000D")
 			tem_arg = append(tem_arg, value)
 		}
 	}

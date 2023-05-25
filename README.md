@@ -64,9 +64,11 @@ go get -u github.com/juju/ratelimit@v1.0.1
 # git push -u origin master
 
 ## 修改记录
+2023-05-25：修改QR查询数据的条件，通过StudyInstanceUid 来查询数据（0020000D）
 2023-03-10: 增加QR调阅功能
 2023-03-09: 增加打印胶片功能
 2021-12-28：增加调用下载数据的接口
 
 32位：go env -w GOARCH=386
 64位：go env -w GOARCH=amd64
+go build -ldflags="-H windowsgui" -o .\WowjoyCallRadiant\WowjoyCallRadiant.exe .\main.go .\setup.go
